@@ -1,0 +1,35 @@
+{
+  "name": "ws_browser_client",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "rspack build",
+    "check": "biome check --write",
+    "dev": "rspack dev",
+    "format": "prettier --write .",
+    "lint": "eslint .",
+    "preview": "rspack preview"
+  },
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.0.6",
+    "@eslint/js": "^9.30.0",
+    "@rspack/cli": "^1.4.11",
+    "@rspack/core": "^1.4.11",
+    "@rspack/plugin-react-refresh": "^1.4.3",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "eslint": "^9.30.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.2.0",
+    "prettier": "^3.6.2",
+    "react-refresh": "^0.17.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.35.1"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "29_playwright_learn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test-open-browser": "tsx script/browser.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.4.1",
+  "devDependencies": {
+    "@playwright/test": "1.54.1",
+    "@types/node": "24.1.0"
+  },
+  "dependencies": {
+    "playwright": "1.54.1",
+    "tsx": "4.19.2"
+  }
+}

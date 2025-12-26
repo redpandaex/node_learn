@@ -1,3 +1,4 @@
+import { validate, required } from './parameterDecorator';
 /** decorator就是一个只能用于修饰类,具备特定函数签名的函数 */
 // 1. 定义一个装饰器
 
@@ -70,6 +71,15 @@ class Person {
   greet() {
     return 'Hello, ' + this.name;
   }
+
+  @validate
+  print(verbose: boolean, @required name: string) {
+    if (verbose) {
+      return `type: ${name}`;
+    } else {
+      return this.name;
+    }
+  }
 }
 //decoratorFactory
 //decorator2
@@ -81,3 +91,4 @@ console.log(Object.hasOwnProperty.call(new Person('lihua'), 'age')); //false
 console.log(Object.hasOwnProperty.call(new Person('lihua'), 'name')); //true
 console.log(new Person('zs').__proto__.hobby); // play tennis
 console.log('[debug] ', new Person('zs').greet()); //[debug]  Hello, zs
+new Person().print(); // 触发validate验证其报错

@@ -2,6 +2,7 @@
 + 背压（Backpressure）是指**在流处理中，当生产者（写入数据的一方）生成数据的速度超过消费者（读取数据的一方）处理数据的速度时，系统采取的一种控制策略**。
 
 + 背压策略的目的是**防止生产者过快地生成数据，从而避免内存溢出或其他资源耗尽的问题**。
+> 实际常见的场景是在分片下载中网络传输速度慢于磁盘读取速度时，流的背压机制会暂停读取（通过readable.pause()），防止数据积压导致内存暴涨
 
 + 在 Web Streams API 中，背压策略通过 `QueuingStrategy` 来实现。[`CountQueuingStrategy`](https://developer.mozilla.org/zh-CN/docs/Web/API/CountQueuingStrategy) 是其中一种策略，它基于队列中的数据块数量来控制背压。
 

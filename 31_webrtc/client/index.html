@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/react.svg" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <title>局域网文件传输</title>
+    <meta name="description" content="基于WebRTC的局域网文件传输应用" />
+    <meta name="theme-color" content="#001529" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="文件传输" />
+    <meta name="format-detection" content="telephone=no" />
+    <style>
+      /* 防止移动端页面抖动 */
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow-x: hidden;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+      }
+
+      /* 加载动画 */
+      #loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #001529;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-size: 16px;
+        z-index: 9999;
+      }
+
+      .loading-spinner {
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top: 3px solid white;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin-right: 12px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loading">
+      <div class="loading-spinner"></div>
+      正在加载...
+    </div>
+    <div id="root"></div>
+    <script>
+      // 隐藏加载动画
+      window.addEventListener('load', function () {
+        setTimeout(function () {
+          const loading = document.getElementById('loading');
+          if (loading) {
+            loading.style.opacity = '0';
+            loading.style.transition = 'opacity 0.3s';
+            setTimeout(function () {
+              loading.style.display = 'none';
+            }, 300);
+          }
+        }, 500);
+      });
+    </script>
+  </body>
+</html>

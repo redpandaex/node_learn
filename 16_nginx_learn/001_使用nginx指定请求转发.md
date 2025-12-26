@@ -138,6 +138,13 @@ http {
   -  `upstream`指令用于定义一个后端服务器组。在该指令块中，可以定义多个服务器和一些参数，Nginx将根据定义的负载均衡算法将请求转发到不同的后端服务器上。
 
     在这段配置中，`upstream myapp { ... }` 定义了一个名为 `myapp` 的后端服务器组，其中包含一组服务器和一些负载均衡相关的配置。这个服务器组的名字 `myapp` 会在 `proxy_pass` 指令中被引用，用于将请求转发给这个服务器组中的服务器。
+  - `upstream`中的`server  address [parameters]` 最后一个参数是可选择的,可以配置权重参数(`weight`),最大失败次数(`max_fails`)等
+  ```nginx.conf
+    upstream backend {
+      server 192.168.1.101 weight=3;  # 60%的请求分配到此服务器
+      server 192.168.1.102 weight=2;  # 40%的请求分配到此服务器
+    }
+  ```
 
 ## 3. 一些location 常见配置的解析
 

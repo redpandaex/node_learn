@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="delete">要被删除的DOM元素</div>
+    <button id="btn">删除DOM元素</button>
+    <button id="cancel">取消FinalizationRegistry的监听</button>
+    <script type="module">
+      //! 点击删除按钮以后,再手动点击浏览器控制台的gc按钮,就可以看到cleanupCallback的触发
+      const btn = document.querySelector('#btn');
+      const deleteDom = document.querySelector('#delete');
+      const cancel = document.querySelector('#cancel');
+
+      const weakRef = new WeakRef(document.querySelector('#delete'));
+
+      const registerToken = Symbol('registerToken');
+
+      const registry = new FinalizationRegistry((heldValue) => {
+        //点击浏览器控制台的gc按钮
+        console.log(
+          `chrome execute gc;dom has been deleted;the register method second params heldValue is ${heldValue} `,
+        );
+      });
+
+      registry.register(weakRef, 'deleteDom', registerToken);
+
+      btn.addEventListener('click', () => {
+        deleteDom.remove();
+        console.log('[debug] btn has executed delete dom');
+      });
+
+      cancel.addEventListener('click', () => {
+        registry.unregister(registerToken);
+        console.log('[debug] has been cancel register callback');
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+       div.container {
+       flex: 0 0 100%;
+       border: 1px solid greenyellow;
+       padding: 24px;
+       margin-bottom: 24px;
+       box-sizing: border-box;
+      }
+      div.box {
+        width: 100px;
+        border: 1px solid brown;
+      }
+      div.box_iso{
+        width: min-content;
+        border: 1px solid brown;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>white-space ;word-break以及overflow-wrap的系统性梳理</h1>
+    
+    <div style="display: flex;align-items: center;flex-wrap: wrap;">
+
+      <!-- white-space -->
+      <div>
+        <h2>white-space 是对html源代码中空白字符(空格、制表符、换行符)进行处理和断行的属性</h2>
+        <div class="container">
+          <h3>normal: 连续的空白符会被合并。源码中的换行符会被当作空白符来处理。并根据填充行框盒子的需要来换行。</h3>
+          <div class="box">Hi&nbsp;&nbsp;,        
+            This is a incomprehensibilities long word. </br> 你好&nbsp;&nbsp;， 这 是一个不可思议的长单词 </div>
+        </div>
+        <div class="container">
+          <h3>nowrap: 和 normal 一样合并空白符，但阻止源码中的文本换行,只有&lt;br&gt;元素才能让其换行</h3>
+          <div class="box" style="white-space: nowrap;">Hi&nbsp;&nbsp;,        
+            This is a incomprehensibilities long word. </br> 你好&nbsp;&nbsp;， 这 是一个不可思议的长单词 </div>
+        </div>
+        <div class="container">
+          <h3>pre: 连续的空白符会被保留。仅在遇到源码的换行符或&lt;br&gt;元素时才会换行。</h3>
+          <div class="box" style="white-space: pre;">Hi&nbsp;&nbsp;,        
+            This is a incomprehensibilities long word. </br> 你好&nbsp;&nbsp;， 这 是一个不可思议的长单词 </div>
+        </div>
+        <div class="container">
+          <h3>pre-wrap: 连续的空白符会被<span style="background-color:  yellowgreen;color:aliceblue;: 700;">保留</span>。在遇到源码的换行符或&lt;br&gt;元素时，或者根据填充行框盒子的需要换行。</h3>
+          <div class="box" style="white-space: pre-wrap;">Hi&nbsp;&nbsp;,        
+            This is a incomprehensibilities long word. </br> 你好&nbsp;&nbsp;， 这 是一个不可思议的长单词 </div>
+        </div>
+        <div class="container">
+          <h3>pre-line: 连续的空白符会被<span style="background-color:  yellowgreen;color:aliceblue;: 700;">合并</span>。在遇到源码的换行符或&lt;br&gt;元素时，或者根据填充行框盒子的需要换行。</h3>
+          <div class="box" style="white-space: pre-line;">Hi&nbsp;&nbsp;,        
+            This is a incomprehensibilities long word. </br> 你好&nbsp;&nbsp;， 这 是一个不可思议的长单词 </div>
+        </div>
+        <div class="container">
+          <h3>break-spaces: 与 pre-wrap 的行为相同，除了：
+            <ul>
+              <li>任何保留的空白序列总是占用空间，包括行末的。</li>
+              <li>每个保留的空白字符后（包括空白字符之间）都可以被截断。</li>
+              <li>这样保留的空间占用空间而不会挂起，从而影响盒子的固有尺寸（min-content 尺寸和 max-content 尺寸）。</li>
+            </ul>
+          </h3>
+          <div class="box" style="white-space: break-spaces;">Hi&nbsp;&nbsp;,        
+            This is a incomprehensibilities long word. </br> 你好&nbsp;&nbsp;， 这 是一个不可思议的长单词 </div>
+        </div>
+      </div>
+
+      <!-- word-break -->
+      <div>
+        <h2>word-break是指定non-CJK(非中日韩文字,如连续的英文字母和数字)单词在文本内断行时的行为,对于连续的CJK,始终视为一个文本</h2>
+        <div class="container">
+          <h3>normal: 使用浏览器默认的断行规则</h3>
+          <ul>
+            <li>对 CJK 文本（中文/日文/韩文）的规则 换行逻辑：浏览器会将每个汉字、日文假名或韩文字母视为独立的断行点，<span style="font-weight: 700;">允许在字符间自由换行</span>。</li>
+            <li>对 Non-CJK 文本（英文、数字等）的规则 换行逻辑：浏览器优先在空格、连字符（`-`）或标点符号处换行，<span style="font-weight: 700;">不允许在单词或数字内部断行</span>。</li>
+          </ul>
+          <div class="box">Hi&nbsp;&nbsp;,        
+            This is a incomprehensibilities long word. </br> 你好&nbsp;&nbsp;， 这 是一个不可思议的长单词 </div>
+        </div>
+        <div class="container">
+          <h3>break-all: 对于 non-CJK (CJK 指中文/日文/韩文)的文本，可在任意字符间进行换行。用于解决长单词数字文本溢出的问题</h3>
+          <div class="box" style="word-break: break-all;">Hi&nbsp;&nbsp;,        
+            This is a incomprehensibilities long word. </br> 你好&nbsp;&nbsp;， 这 是一个不可思议的长单词 </div>
+        </div>
+        <div class="container">
+          <h3>keep-all: CJK 文本不断行。Non-CJK 文本表现同 normal。</h3>
+          <div class="box" style="word-break: keep-all;">Hi&nbsp;&nbsp;,        
+            This is a incomprehensibilities long word. </br> 你好&nbsp;&nbsp;， 这 是一个不可思议的长单词 </div>
+        </div>
+      </div>
+
+      <!-- overflow-wrap -->
+      <div>
+        <h2>overflow-wrap是标准叫法,word-wrap是微软私有属性后来被纳入标准,CSS 属性“overflow-wrap”适用于文本，用于设置浏览器是否应在原本不可断行的字符串中插入换行符，以防止文本溢出其行框。</h2>
+      </div>
+
+      <div class="container">
+        <h3>normal: 行只能在正常的断句点换行（例如两个单词之间的空格）。</h3>
+        <div class="box">Hi&nbsp;&nbsp;,        
+          This is a incomprehensibilities long word. 114514111111111111111111111111111111 哈哈哈哈哈哈哈哈</br> 你好&nbsp;&nbsp;， 这 是一个不可思议的长单词 </div>
+      </div>
+      <div class="container">
+        <h3>break-word: 通常不可断开的单词在一行中如果没有其他可接受的断点时，允许在任意位置断开，但在计算min-content固有尺寸时，由单词断开引入计算最小内容固有尺寸时，由单词断开引入的软换行机会不被考虑在内。</h3>
+        <div class="box_iso" style="overflow-wrap: break-word;">Hi&nbsp;&nbsp;,        
+          This is a incomprehensibilities long word. 114514111111111111111111111111111111 哈哈哈哈哈哈哈哈</br> 你好&nbsp;&nbsp;， 这 是一个不可思议的长单词 </div>
+      </div>
+      <div class="container">
+        <h3>break-word: 允许在任意字符处断行，且会主动影响容器的固有尺寸计算**。使用 min-content 时，容器宽度可能被压缩到单个字符的宽度（如英文的单个字母或中文的单个汉字）</h3>
+        <div class="box_iso" style="overflow-wrap: anywhere;">Hi&nbsp;&nbsp;,        
+          This is a incomprehensibilities long word. 114514111111111111111111111111111111 哈哈哈哈哈哈哈哈</br> 你好&nbsp;&nbsp;， 这 是一个不可思议的长单词 </div>
+      </div>
+    </div>
+  </body>
+</html>

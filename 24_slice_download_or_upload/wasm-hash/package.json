@@ -1,0 +1,24 @@
+{
+  "name": "wasm-hash",
+  "version": "0.1.0",
+  "description": "WebAssembly hash calculator using blake3",
+  "main": "pkg/wasm_hash.js",
+  "types": "pkg/wasm_hash.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "wasm-pack build --target web",
+    "build:release": "wasm-pack build --target web --release",
+    "deploy": "pnpm run build:release && tsx scripts/deploy.ts"
+  },
+  "keywords": [
+    "webassembly",
+    "wasm",
+    "rust",
+    "blake3"
+  ],
+  "author": "Matryoshka",
+  "license": "MIT",
+  "dependencies": {
+    "tsx": "4.19.2"
+  }
+}
