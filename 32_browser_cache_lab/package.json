@@ -1,0 +1,13 @@
+{
+  "name": "browser-cache-lab",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "用真实浏览器和 Node.js HTTP 服务观察强缓存与协商缓存",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test test/server.test.mjs",
+    "test:browser": "node scripts/browser-check.mjs"
+  }
+}

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>浏览器缓存实验室</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/style.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/"><span class="brand-icon">HTTP</span><span>浏览器缓存实验室</span></a>
+    <span class="local-label"><i></i>本地真实 HTTP 服务</span>
+  </header>
+
+  <main>
+    <div class="intro">
+      <p class="eyebrow">从一次请求，看懂缓存</p>
+      <h1>这次请求，真的到服务端了吗？</h1>
+      <p>点一次，再点一次。对照浏览器内容和服务端记录，亲手验证强缓存与协商缓存。</p>
+    </div>
+
+    <aside class="devtools-note">
+      <span class="note-icon" aria-hidden="true">i</span>
+      <div><strong>先打开开发者工具 → Network，取消勾选 Disable cache。</strong>
+        <p>筛选 <code>/resources/</code>。全程点下面的“请求资源”，先别刷新页面。勾选禁用缓存会改变实验结果。</p>
+      </div>
+    </aside>
+
+    <p id="error" class="error" role="alert" hidden></p>
+    <div class="workspace" aria-busy="true" id="workspace">
+      <aside class="sidebar">
+        <p class="section-label">六个实验 · 从上往下试</p>
+        <nav id="experiments" aria-label="选择缓存实验"></nav>
+        <div class="sidebar-tip"><strong>先记住这两个区别</strong><p><code>no-cache</code> 可以存，但复用前要验证。<br><code>no-store</code> 不保存这份响应。</p></div>
+      </aside>
+
+      <div class="experiment">
+        <section class="panel controls">
+          <div class="experiment-heading"><span id="case-number" class="case-number">01</span><div><p id="case-kind" class="eyebrow">强缓存</p><h2 id="case-title">正在连接本地服务…</h2></div></div>
+          <p id="case-description" class="description"></p>
+          <div class="policy-row"><span>服务端策略</span><code id="policy">—</code></div>
+          <ol id="steps" class="steps"></ol>
+          <div class="resource-line"><span>固定资源 URL</span><code id="resource-url">—</code></div>
+          <div class="actions">
+            <button id="request" class="primary" disabled>请求资源</button>
+            <button id="mutate" disabled>修改服务端内容</button>
+            <button id="reset" class="quiet" disabled>开始新一轮</button>
+          </div>
+          <details class="advanced"><summary>进阶：手动改变 fetch 的缓存模式</summary><label for="cache-mode">请求模式</label>
+            <select id="cache-mode"><option value="default">default · 按响应头正常使用缓存</option><option value="no-cache">no-cache · 这次主动向服务端验证</option><option value="reload">reload · 这次跳过旧缓存，重新下载</option></select>
+            <p>这是本次请求的选项。上面的响应头是服务端策略，两者一起决定浏览器行为。入门先保持 default。</p>
+          </details>
+        </section>
+
+        <section id="outcome" class="outcome neutral" aria-live="polite">
+          <span id="outcome-label" class="outcome-label">等待第一次请求</span>
+          <p id="outcome-message">先点击“请求资源”，再对照下方两边的变化。</p>
+        </section>
+
+        <div class="evidence-grid">
+          <section class="panel evidence">
+            <div class="card-heading"><h3>浏览器拿到的内容</h3><span id="browser-version" class="tag">尚未读取</span></div>
+            <p class="card-note">由真实的 fetch 读取，页面没有模拟缓存。</p>
+            <div class="stat-line"><span>JavaScript 读到的 status</span><strong id="js-status">—</strong></div>
+            <div class="freshness"><div class="freshness-heading"><span id="freshness-label">新鲜度：请求后开始观察</span></div><div class="meter"><span id="freshness-meter"></span></div></div>
+            <pre id="browser-body" class="code-block">// 等待浏览器读取资源</pre>
+            <details class="headers-detail"><summary>浏览器可见的响应头</summary><pre id="browser-headers" class="code-block">还没有响应</pre></details>
+          </section>
+          <section class="panel evidence">
+            <div class="card-heading"><h3>服务端实际收到的请求</h3><span id="server-version" class="tag">当前 v1</span></div>
+            <p class="card-note">这里只统计当前资源，页面和控制接口不计入。</p>
+            <div class="stat-line"><span>已记录资源请求</span><strong><span id="request-count">0</span><small> 次</small></strong></div>
+            <div class="stat-line server-status"><span>本次真实网络响应</span><strong id="wire-status">—</strong></div>
+            <div class="conditional"><p class="section-label">最近一次到达服务端的条件请求头</p><pre id="request-headers" class="code-block">还没有资源请求</pre></div>
+            <p id="server-explanation" class="explanation">每次命中强缓存，这里的请求次数都不会增加。</p>
+          </section>
+        </div>
+
+        <section class="panel journal-panel">
+          <div class="card-heading"><h3>服务端请求记录</h3><span class="muted">仅当前实验 · 新请求在前</span></div>
+          <div class="table-scroll"><table><thead><tr><th>序号 / 时间</th><th>真实状态</th><th>条件</th><th>内容</th><th>响应体</th></tr></thead><tbody id="journal"><tr><td colspan="5" class="empty">还没有请求。命中强缓存时，这里不会新增记录。</td></tr></tbody></table></div>
+        </section>
+
+        <details class="panel understanding"><summary>怎么把实验结果和概念对应起来？</summary>
+          <ol><li><strong>先判断有没有可用的本地响应。</strong>第一次没有，就正常下载，通常得到 200。</li><li><strong>再看是否可以直接复用。</strong><code>max-age</code> 或 <code>Expires</code> 允许且仍新鲜时，可以命中强缓存，无须询问服务端。</li><li><strong>需要验证时发送条件请求。</strong><code>ETag → If-None-Match</code>；<code>Last-Modified → If-Modified-Since</code>。没变返回 304，不传响应体；变了返回 200 和新内容。</li></ol>
+          <p><strong>别被 200 迷惑：</strong>fetch 通常把“服务端 304 + 本地缓存体”合并成可用响应，JavaScript 读到的 status 仍是 200。Network 面板和右侧服务端记录才能说明线上发生了什么。</p>
+          <p>这里验证的是浏览器的 HTTP 缓存。没有 Service Worker、Cache API、localStorage 内容缓存，也没有代理或 CDN。</p>
+        </details>
+      </div>
+    </div>
+  </main>
+  <footer>同一轮使用固定 URL。“开始新一轮”会换一个 URL，不会清理整个浏览器的缓存。服务重启后请开始新一轮。</footer>
+</body>
+</html>
